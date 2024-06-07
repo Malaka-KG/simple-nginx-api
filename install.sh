@@ -163,7 +163,7 @@ EOL
 # Dapatkan sertifikat SSL
 function obtain_ssl_certificate() {
     echo -e "${YELLOW}Obtaining SSL certificate...${NC}"
-    certbot --nginx -d $api_domain -d $root_domain -d www.$root_domain --non-interactive --agree-tos --email $email
+    certbot --nginx -d $api_domain -d $root_domain -d --non-interactive --agree-tos --email $email
 }
 
 # Opsi menu untuk pilihan instalasi
