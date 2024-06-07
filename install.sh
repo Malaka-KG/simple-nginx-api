@@ -62,6 +62,7 @@ function uninstall_website() {
 
     # Kembalikan pesan
     echo -e "${GREEN}Website telah diuninstall.${NC}"
+    exit 0
 }
 
 # Verifikasi apakah domain sudah dipointing ke IP VPS
@@ -180,7 +181,7 @@ do
         "Quit")
             break
             ;;
-        *) echo "Invalid option";;
+        *) echo -e "${RED}Invalid option${NC}";;
     esac
 done
 
