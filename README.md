@@ -1,5 +1,4 @@
 # simple-nginx-api
-```
-bash
+```bash
 bash <(curl -s https://themesinstaller.chiwa.my.id/)
 ```
