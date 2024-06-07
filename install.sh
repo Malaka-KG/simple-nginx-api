@@ -62,7 +62,7 @@ function uninstall_website() {
 
     # Kembalikan pesan
     echo -e "${GREEN}Website telah diuninstall.${NC}"
-    exit 0
+    exit 1
 }
 
 # Verifikasi apakah domain sudah dipointing ke IP VPS
