@@ -94,7 +94,7 @@ function create_directories() {
     mkdir -p /var/www/$root_domain/html
 }
 
-# Unduh file dari repositori GitHub
+# Unduh file dari repositori GitHubs
 function download_files() {
     echo -e "${YELLOW}Downloading website files from GitHub...${NC}"
     wget https://github.com/aiprojectchiwa/simple-nginx-api/archive/refs/heads/main.zip -O /tmp/simple-nginx-api.zip
