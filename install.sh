@@ -6,17 +6,17 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# tanya input
+# input
 function prompt_user() {
     read -p "$(echo -e ${YELLOW}$1 ${NC}[$2]): " input
     echo ${input:-$2}
 }
 
-# input domain
+# input domain var
 api_domain=$(prompt_user "Your API Domain (e.g., api.chiwa.my.id)" "api.chiwa.my.id")
 root_domain=$(prompt_user "Your root domain (e.g., chiwa.my.id)" "chiwa.my.id")
 
-# verif pointing
+# verif dom
 echo -e "${YELLOW}Verifying domain pointing...${NC}"
 ip_address=$(curl -s http://ipinfo.io/ip)
 api_domain_ip=$(dig +short $api_domain)
@@ -39,17 +39,25 @@ echo -e "${YELLOW}Updating and installing Nginx...${NC}"
 apt update
 apt install -y nginx unzip
 
-# mkdir
+# dir for web
 echo -e "${YELLOW}Creating directories...${NC}"
 mkdir -p /var/www/api
 mkdir -p /var/www/$root_domain/html
 
-# dl eks to root
-echo -e "${YELLOW}Downloading and extracting website files...${NC}"
-wget https://github.com/aiprojectchiwa/simple-nginx-api/raw/main/site.zip -O /tmp/site.zip
-unzip /tmp/site.zip -d /var/www
+# dl
+echo -e "${YELLOW}Downloading website files from GitHub...${NC}"
+wget https://github.com/aiprojectchiwa/simple-nginx-api/archive/refs/heads/main.zip -O /tmp/simple-nginx-api.zip
+unzip /tmp/simple-nginx-api.zip -d /tmp
 
-# copy conf to nginx
+# Pindahkan file ke direktori web root
+echo -e "${YELLOW}Moving files to web root...${NC}"
+cp -r /tmp/simple-nginx-api-main/api/* /var/www/api/
+cp -r /tmp/simple-nginx-api-main/chiwa.my.id/html/* /var/www/$root_domain/html/
+
+# del temp
+rm -rf /tmp/simple-nginx-api.zip /tmp/simple-nginx-api-main
+
+# copy sinet-avail
 echo -e "${YELLOW}Configuring Nginx...${NC}"
 cat <<EOL > /etc/nginx/sites-available/$root_domain
 server {
@@ -87,15 +95,15 @@ server {
 }
 EOL
 
-# Buat symlink ke sites-enabled
+# symlink
 ln -s /etc/nginx/sites-available/$root_domain /etc/nginx/sites-enabled/
 ln -s /etc/nginx/sites-available/$api_domain /etc/nginx/sites-enabled/
 
-# Uji konfigurasi Nginx
+# test
 echo -e "${YELLOW}Testing Nginx configuration...${NC}"
 nginx -t
 
-# Restart Nginx untuk menerapkan konfigurasi baru
+# restart
 echo -e "${YELLOW}Restarting Nginx...${NC}"
 systemctl restart nginx
 
