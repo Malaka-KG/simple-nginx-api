@@ -42,6 +42,7 @@ function install_website() {
 
     # Kembalikan pesan
     echo -e "${GREEN}Website telah terinstall dan seharusnya bisa diakses pada http://$root_domain dan http://$api_domain.${NC}"
+    exit 1
 }
 
 # Uninstall website otomatis
