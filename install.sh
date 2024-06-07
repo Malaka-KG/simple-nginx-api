@@ -46,6 +46,10 @@ function install_website() {
 
 # Uninstall website otomatis
 function uninstall_website() {
+    # Menanyakan informasi dari pengguna
+    api_domain=$(prompt_user "Your API Domain (e.g., api.chiwa.my.id)" "api.chiwa.my.id")
+    root_domain=$(prompt_user "Your root domain (e.g., chiwa.my.id)" "chiwa.my.id")
+
     # Hapus konfigurasi Nginx
     rm -f /etc/nginx/sites-available/$api_domain
     rm -f /etc/nginx/sites-available/$root_domain
@@ -94,7 +98,7 @@ function create_directories() {
     mkdir -p /var/www/$root_domain/html
 }
 
-# Unduh file dari repositori GitHubs
+# Unduh file dari repositori GitHub
 function download_files() {
     echo -e "${YELLOW}Downloading website files from GitHub...${NC}"
     wget https://github.com/aiprojectchiwa/simple-nginx-api/archive/refs/heads/main.zip -O /tmp/simple-nginx-api.zip
@@ -113,39 +117,39 @@ function move_files() {
 function configure_nginx() {
     echo -e "${YELLOW}Configuring Nginx...${NC}"
     cat <<EOL > /etc/nginx/sites-available/$root_domain
-    server {
-        listen 80;
-        server_name $root_domain www.$root_domain;
+server {
+    listen 80;
+    server_name $root_domain www.$root_domain;
 
-        root /var/www/$root_domain/html;
-        index index.html;
+    root /var/www/$root_domain/html;
+    index index.html;
 
-        location / {
-            try_files \$uri \$uri/ =404;
-        }
+    location / {
+        try_files \$uri \$uri/ =404;
     }
+}
 EOL
 
     cat <<EOL > /etc/nginx/sites-available/$api_domain
-    server {
-        listen 80;
-        server_name $api_domain;
+server {
+    listen 80;
+    server_name $api_domain;
 
-        location / {
-            default_type text/html;
-            root /var/www/api;
-            index index.html;
-        }
-
-        location /banned/list {
-            default_type application/json;
-            alias /var/www/api/banned.json;
-        }
-        location /mail {
-            default_type application/json;
-            alias /var/www/api/mail.json;
-        }
+    location / {
+        default_type text/html;
+        root /var/www/api;
+        index index.html;
     }
+
+    location /banned/list {
+        default_type application/json;
+        alias /var/www/api/banned.json;
+    }
+    location /mail {
+        default_type application/json;
+        alias /var/www/api/mail.json;
+    }
+}
 EOL
 
     ln -s /etc/nginx/sites-available/$root_domain /etc/nginx/sites-enabled/
