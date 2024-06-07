@@ -51,10 +51,10 @@ function uninstall_website() {
     root_domain=$(prompt_user "Your root domain (e.g., chiwa.my.id)" "chiwa.my.id")
 
     # Hapus konfigurasi Nginx
-    rm -f /etc/nginx/sites-available/$api_domain
-    rm -f /etc/nginx/sites-available/$root_domain
-    rm -f /etc/nginx/sites-enabled/$api_domain
-    rm -f /etc/nginx/sites-enabled/$root_domain
+    rm /etc/nginx/sites-available/$api_domain
+    rm /etc/nginx/sites-available/$root_domain
+    rm /etc/nginx/sites-enabled/$api_domain
+    rm /etc/nginx/sites-enabled/$root_domain
 
     # Hapus direktori website
     rm -rf /var/www/api
@@ -163,7 +163,7 @@ EOL
 # Dapatkan sertifikat SSL
 function obtain_ssl_certificate() {
     echo -e "${YELLOW}Obtaining SSL certificate...${NC}"
-    certbot --nginx -d $api_domain -d $root_domain -d --non-interactive --agree-tos --email $email
+    certbot --nginx -d $api_domain -d $root_domain --non-interactive --agree-tos --email $email
 }
 
 # Opsi menu untuk pilihan instalasi
@@ -181,7 +181,7 @@ do
         "Quit")
             break
             ;;
-        *) echo -e "${RED}Invalid option${NC}";;
+        *) echo "Invalid option";;
     esac
 done
 
